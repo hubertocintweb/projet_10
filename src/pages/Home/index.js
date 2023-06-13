@@ -116,6 +116,7 @@ const Page = () => {
     <footer className="row">
       <div className="col presta">
         <h3>Notre dernière prestation</h3>
+        {last && (
         <EventCard
           key={`${last?.id}${last?.date}`}
           imageSrc={last?.cover}
@@ -123,7 +124,7 @@ const Page = () => {
           date={new Date(last?.date)}
           small
           label={last?.title}
-        />
+        />)}
       </div>
       <div className="col contact">
         <h3>Contactez-nous</h3>
