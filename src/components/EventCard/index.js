@@ -12,7 +12,8 @@ const EventCard = ({
   small = false,
   ...props
 }) => (
-    <div
+    <div 
+      key={`key${title}${date}${label}`}
       data-testid="card-testid"
       className={`EventCard${small ? " EventCard--small" : ""}`}
       {...props}
