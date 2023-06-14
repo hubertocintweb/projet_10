@@ -13,21 +13,31 @@ const EventList = () => {
   const { data, error } = useData();
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const filteredEvents = (
-    (!type
-      ? data?.events
-      : data?.events) || []
-  ).filter((event, index) => {
-    if ((currentPage - 1) * PER_PAGE <= index &&
-    PER_PAGE * currentPage > index && (event.type === type || !type)) {
-        return true;
+
+  const filteredEvents = ((data && data.events) || []).filter((event) => {
+    if (event.type === type || !type) {
+      return true;
     }
     return false;
   });
+  const pager = (index) => {
+    let res = false;
+    if (currentPage === 1) {
+      res = currentPage + index <= currentPage * PER_PAGE;
+    } else {
+      res =
+        currentPage + index <= currentPage * PER_PAGE &&
+        currentPage + index > (currentPage - 1) * PER_PAGE;
+    }
+    return res;
+  };
+
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
+  const changeHandler = (event) =>
+    event ? changeType(event) : changeType(null);
   const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
   return (
@@ -38,28 +48,33 @@ const EventList = () => {
       ) : (
         <>
           <h3 className="SelectTitle">Catégories</h3>
-          <Select
-            selection={Array.from(typeList)}
-            onChange={(value) => (value ? changeType(value) : changeType(null))}
-          />
+          <Select selection={Array.from(typeList)} onChange={changeHandler} />
           <div id="events" className="ListContainer">
-            {filteredEvents.map((event) => (
-              <Modal key={event.id} Content={<ModalEvent event={event} />}>
-                {({ setIsOpened }) => (
-                  <>
-                  <div />
-                  {event && (
-                  <EventCard
-                    onClick={() => setIsOpened(true)}
-                    imageSrc={event.cover}
-                    title={event.title}
-                    date={new Date(event.date)}
-                    label={event.type}
-                  />
-                  )}
-                  </>
+            {filteredEvents.map((event, index) => (
+              <div key={event.id}>
+                {pager(index) && (
+                  <Modal
+                    key={event.id}
+                    Content={
+                      <ModalEvent event={event} key={`${event.id}event`} />
+                    }
+                  >
+                    {({ setIsOpened }) => (
+                      <div>
+                        {event && (
+                          <EventCard
+                            onClick={() => setIsOpened(true)}
+                            imageSrc={event.cover}
+                            title={event.title}
+                            date={new Date(event.date)}
+                            label={event.type}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Modal>
                 )}
-              </Modal>
+              </div>
             ))}
           </div>
           <div className="Pagination">
