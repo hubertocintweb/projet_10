@@ -23,11 +23,11 @@ const EventList = () => {
   const pager = (index) => {
     let res = false;
     if (currentPage === 1) {
-      res = currentPage + index <= currentPage * PER_PAGE;
+      res = currentPage + index <= currentPage * PER_PAGE ;
     } else {
       res =
-        currentPage + index <= currentPage * PER_PAGE &&
-        currentPage + index > (currentPage - 1) * PER_PAGE;
+        (index + 1) <= currentPage * PER_PAGE &&
+        (index + 1) > (currentPage - 1) * PER_PAGE;
     }
     return res;
   };
