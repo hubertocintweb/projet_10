@@ -121,7 +121,7 @@ const Page = () => {
               title={last?.title}
               date={new Date(last?.date)}
               small
-              label={last?.title}
+              label={last?.type}
             />
           )}
         </div>
