@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { api, DataProvider } from "../../contexts/DataContext";
-import { act } from "react-dom/test-utils";
 import Events from "./index";
 
 const data = {
@@ -52,14 +51,13 @@ describe("When Events is created", () => {
   });
   describe("and an error occured", () => {
     it("an error message is displayed", async () => {
-      api.loadData = jest.fn().mockRejectedValue();
-      act(() => render(
+      api.loadData = jest.fn().mockRejectedValue(new Error('Error'));
+      render(
         <DataProvider>
           <Events />
         </DataProvider>
-      ));
-      act(async () => {let test = await screen.queryByText("An error occured");
-      console.log(test);})
+      );
+      expect(await screen.findAllByText("An error occured")).toBeTruthy();
     });
   });
   describe("and we select a category", () => {
